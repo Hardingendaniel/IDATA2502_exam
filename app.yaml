@@ -1,0 +1,12 @@
+runtime: nodejs22
+env: standard
+
+handlers:
+  # Serve all static files from the /static directory (CSS, JS, media, etc.)
+  - url: /static
+    static_dir: build/static
+
+  # Serve the main index.html for all other paths
+  - url: /.*
+    static_files: build/index.html
+    upload: build/index.html
