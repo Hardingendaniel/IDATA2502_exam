@@ -1,4 +1,4 @@
-name: Deployment
+name: Deploy React App to Azure
 
 concurrency:
   group: production
@@ -7,12 +7,36 @@ concurrency:
 on:
   push:
     branches:
-      - main
+      - main  # Triggers the deployment on push to the main branch
 
 jobs:
-  deployment:
+  deploy:
     runs-on: ubuntu-latest
     environment: production
+
     steps:
-      - name: deploy
-        # ...deployment-specific steps
+      # Step 1: Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'  # Use a compatible version with your project
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Build the React app
+      - name: Build the app
+        run: npm run build
+
+      # Step 5: Deploy to Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: Microsoft.Web-WebAppDatabase-Portal-7520eba3-9f  # Replace with the name of your Azure Web App
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          package: ./build
