@@ -1,5 +1,6 @@
 provider "azurerm" {
   features {}
+  subscription_id = var.subscription_id
 }
 
 resource "azurerm_resource_group" "rg" {
@@ -18,6 +19,10 @@ resource "azurerm_kubernetes_cluster" "aks" {
     node_count = 1
     vm_size    = "Standard_DS2_v2"
   }
+
+  identity { # Use Managed Identity
+    type = "SystemAssigned"
+  }
 }
 
 resource "azurerm_container_registry" "acr" {
@@ -29,9 +34,14 @@ resource "azurerm_container_registry" "acr" {
 
 resource "azurerm_container_registry_webhook" "webhook" {
   name                = "webhook"
-  registry_id         = azurerm_container_registry.acr.id
+  registry_name       = azurerm_container_registry.acr.name
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  status              = "Enabled"
+  service_uri         = "https://example.com/webhook-handler" # Replace with your endpoint
+  actions             = ["push"] # Add the actions you need
+  status              = "enabled" 
 }
+
+
+
 
