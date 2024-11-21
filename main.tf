@@ -9,9 +9,9 @@ provider "azurerm" {
 
 terraform { 
   backend "azurerm" { 
-    resource_group_name = myResourceGroup 
-    storage_account_name = hardingentfstate 
-    container_name = "your_container" 
+    resource_group_name = "myResourceGroup" 
+    storage_account_name = "hardingentfstate" 
+    container_name = "hardingentfstatecontainer" 
     key = "terraform.tfstate" 
     } 
 }
