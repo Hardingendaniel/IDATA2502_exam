@@ -7,6 +7,15 @@ provider "azurerm" {
   tenant_id       = var.tenant_id
 }
 
+terraform { 
+  backend "azurerm" { 
+    resource_group_name = myResourceGroup 
+    storage_account_name = hardingentfstate 
+    container_name = "your_container" 
+    key = "terraform.tfstate" 
+    } 
+}
+
 variable "subscription_id" {
   description = "The Azure subscription ID"
   type        = string
