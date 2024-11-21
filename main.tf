@@ -37,7 +37,7 @@ variable "tenant_id" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name     = "myResourceGroup"
+  name     = "myAzuremGroup"
   location = "Norway East"
 }
 
