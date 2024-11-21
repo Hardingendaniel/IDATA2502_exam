@@ -1,0 +1,54 @@
+name: Destroy AKS Resources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.x
+
+      - name: Terraform Init
+        run: terraform init
+        env:
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -var "subscription_id=${{ secrets.AZURE_SUBSCRIPTION_ID }}" \
+                             -var "client_id=${{ secrets.AZURE_CLIENT_ID }}" \
+                             -var "client_secret=${{ secrets.AZURE_CLIENT_SECRET }}" \
+                             -var "tenant_id=${{ secrets.AZURE_TENANT_ID }}"
+        env:
+          ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Configure kubectl
+        run: az aks get-credentials --resource-group myAzuremGroup --name myAKSCluster
+        env:
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
+      - name: Delete Kubernetes Resources
+        run: |
+          kubectl delete -f k8s/deployment.yml
+          kubectl delete -f k8s/service.yml
