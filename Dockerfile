@@ -18,6 +18,6 @@ RUN npm run build
 RUN npm install -g serve
 CMD ["serve", "-s", "build"]
 
-# Expose port 5000
-EXPOSE 5000
+# Expose port 3000
+EXPOSE 3000
 
