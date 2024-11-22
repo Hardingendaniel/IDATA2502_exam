@@ -17,3 +17,5 @@ spec:
           image: testingdockerimage.azurecr.io/idata2502_exam:latest
           ports:
             - containerPort: 3000
+      imagePullSecrets:
+        - name: acr-secret
