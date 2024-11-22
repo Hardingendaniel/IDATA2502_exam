@@ -15,8 +15,8 @@ COPY . .
 RUN npm run build
 
 # Install and configure serve
-RUN npm install
-CMD ["npm", "start"]
+RUN npm install -g serve
+CMD ["npm", "start", "build"]
 
 # Expose port 3000
 EXPOSE 3000

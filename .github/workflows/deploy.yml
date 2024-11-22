@@ -76,10 +76,19 @@ jobs:
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
 
+      - name: Create Kubernetes Secret
+        run: |
+          kubectl create secret docker-registry acr-secret \
+            --docker-server=testingdockerimage.azurecr.io \
+            --docker-username=${{ secrets.ACR_USERNAME }} \
+            --docker-password=${{ secrets.ACR_PASSWORD }} \
+            --docker-email=daniel.auflem@hotmail.com
+
       - name: Deploy to AKS
         run: |
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
+
 
 
 
