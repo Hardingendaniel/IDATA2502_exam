@@ -109,7 +109,7 @@ jobs:
       - name: Run Integration Tests
         run: |
           kubectl run test-runner --image=testingdockerimage.azurecr.io/idata2502_exam --restart=Never -- /bin/sh -c "./run_tests.sh"
-          kubectl wait --for=condition=complete job/test-runner
+          kubectl wait --for=condition=complete pod/test-runner --timeout=100s
 
 
 
