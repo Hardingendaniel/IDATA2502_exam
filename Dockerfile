@@ -12,12 +12,6 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
-# Copy the run_tests.sh script
-COPY run_tests.sh .
-
-# Make the script executable
-RUN chmod +x run_tests.sh
-
 # Build the React app
 RUN npm run build
 
