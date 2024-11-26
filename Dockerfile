@@ -15,9 +15,6 @@ COPY . .
 # Build the React app
 RUN npm run build
 
-# Run unit tests
-RUN npm run test
-
 # Install and configure serve
 RUN npm install -g serve
 

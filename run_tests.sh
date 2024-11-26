@@ -2,7 +2,7 @@
 # run_tests.sh
 
 # Wait for the deployed application to be ready
-sleep 180
+sleep 10
 
 kubectl wait --for=condition=ready pod -l app=my-app --timeout
 
