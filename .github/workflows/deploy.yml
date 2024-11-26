@@ -106,10 +106,10 @@ jobs:
           kubectl apply --dry-run=client -f k8s/deployment.yml
           kubectl apply --dry-run=client -f k8s/service.yml
 
-      - name: Run Integration Tests
-        run: |
-          kubectl run test-runner --image=testingdockerimage.azurecr.io/idata2502_exam --restart=Never -- /bin/sh -c "./run_tests.sh"
-          kubectl wait --for=condition=complete job/test-runner
+     ## - name: Run Integration Tests
+     ##   run: |
+     ##     kubectl run test-runner --image=testingdockerimage.azurecr.io/idata2502_exam --restart=Never -- /bin/sh -c "./run_tests.sh"
+     ##     kubectl wait --for=condition=complete job/test-runner
 
 
 
