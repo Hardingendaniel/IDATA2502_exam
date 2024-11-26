@@ -18,9 +18,16 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         run: |
           docker build -t testingdockerimage.azurecr.io/idata2502_exam:latest .
+
+      - name: Test Docker image
+        run: |
+          docker run --rm testingdockerimage.azurecr.io/idata2502_exam:latest npm test
+
+      - name: Push Docker image
+        run: |
           docker push testingdockerimage.azurecr.io/idata2502_exam:latest
 
       - name: Azure Login
@@ -98,6 +105,13 @@ jobs:
         run: |
           kubectl apply --dry-run=client -f k8s/deployment.yml
           kubectl apply --dry-run=client -f k8s/service.yml
+
+      - name: Run Integration Tests
+        run: |
+          kubectl run test-runner --image=testingdockerimage.azurecr.io/idata2502_exam --restart=Never -- /bin/sh -c "./run_tests.sh"
+          kubectl wait --for=condition=complete job/test-runner
+
+
 
 
 
