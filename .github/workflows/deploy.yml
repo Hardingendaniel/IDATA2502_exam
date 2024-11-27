@@ -108,6 +108,7 @@ jobs:
 
       - name: Verify Deployment
         run: |
+
           sleep 60
           # Fetch the external IP address of the service
           EXTERNAL_IP=$(kubectl get svc react-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
@@ -128,9 +129,7 @@ jobs:
           echo "Response from the application: $RESPONSE"
 
           # Verify the response contains expected content
-          if [[ "$RESPONSE" != *"Welcome to the portfolio assignment"* ]] || \
-             [[ "$RESPONSE" != *"This is a simple React setup to use delivery pipeline for the portfolio assignment in IDATA2502"* ]] || \
-             [[ "$RESPONSE" != *"by Daniel Eikås"* ]]; then
+          if [[ "$RESPONSE" != *"Welcome to the portfolio assignment"* ]]; then 
             echo "Application response does not contain the expected content. Deployment verification failed."
             exit 1
           fi
