@@ -129,10 +129,10 @@ jobs:
           echo "Response from the application: $RESPONSE"
 
           # Verify the response contains expected content
-          if [[ "$RESPONSE" != *"Welcome to the portfolio assignment"* ]]; then 
+          if [[ "$RESPONSE" != *"Deployment is working!"* ]]; then
             echo "Application response does not contain the expected content. Deployment verification failed."
             exit 1
-          fi
+            fi
 
           echo "Deployment verification successful! The application is running and serving the expected content."
  
