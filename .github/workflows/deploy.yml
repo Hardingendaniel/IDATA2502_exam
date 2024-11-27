@@ -108,33 +108,34 @@ jobs:
 
       - name: Verify Deployment
         run: |
+          # Fetch the external IP address of the service
+          EXTERNAL_IP=$(kubectl get svc react-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+          echo "External IP: $EXTERNAL_IP"
 
-            EXTERNAL_IP=$(kubectl get svc react-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-            echo "External IP: $EXTERNAL_IP"
-        
-            # Ensure the external IP is available
-            if [ -z "$EXTERNAL_IP" ]; then
-              echo "Service is not exposed with an external IP. Deployment failed."
-              exit 1
-            fi
-        
-            # Allow time for the service to become available
-            echo "Waiting for the application to be accessible..."
-            sleep 30
-        
-            # Test the application's endpoint
-            RESPONSE=$(curl -s http://$EXTERNAL_IP)
-            echo "Response from the application: $RESPONSE"
-        
-            # Verify the response contains expected content
-            if [[ "$RESPONSE" != *"Welcome to the portfolio assignment"* ]] || \
-               [[ "$RESPONSE" != *"This is a simple React setup to use delivery pipeline for the portfolio assignment in IDATA2502"* ]] || \
-               [[ "$RESPONSE" != *"by Daniel Eikås"* ]]; then
-              echo "Application response does not contain the expected content. Deployment verification failed."
-              exit 1
-            fi
-        
-            echo "Deployment verification successful! The application is running and serving the expected content."        
+          # Ensure the external IP is available
+          if [ -z "$EXTERNAL_IP" ]; then
+            echo "Service is not exposed with an external IP. Deployment failed."
+            exit 1
+          fi
+
+          # Allow time for the service to become available
+          echo "Waiting for the application to be accessible..."
+          sleep 30
+
+          # Test the application's endpoint
+          RESPONSE=$(curl -s http://$EXTERNAL_IP)
+          echo "Response from the application: $RESPONSE"
+
+          # Verify the response contains expected content
+          if [[ "$RESPONSE" != *"Welcome to the portfolio assignment"* ]] || \
+             [[ "$RESPONSE" != *"This is a simple React setup to use delivery pipeline for the portfolio assignment in IDATA2502"* ]] || \
+             [[ "$RESPONSE" != *"by Daniel Eikås"* ]]; then
+            echo "Application response does not contain the expected content. Deployment verification failed."
+            exit 1
+          fi
+
+          echo "Deployment verification successful! The application is running and serving the expected content."
+ 
             
 
 
