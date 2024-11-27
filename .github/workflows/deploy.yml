@@ -106,22 +106,26 @@ jobs:
           kubectl apply --dry-run=client -f k8s/deployment.yml
           kubectl apply --dry-run=client -f k8s/service.yml
 
+      - name: Install Puppeteer
+        run: npm install puppeteer --save-dev
+
       - name: Verify Deployment
         run: |
+          echo "Waiting for the deployment to stabilize..."
+          sleep 20  # Allow time for the deployment to stabilize
 
-          sleep 20
-          # Fetch the external IP address of the service
           EXTERNAL_IP=$(kubectl get svc react-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "External IP: $EXTERNAL_IP"
 
-          # Ensure the external IP is available
           if [ -z "$EXTERNAL_IP" ]; then
             echo "Service is not exposed with an external IP. Deployment failed."
             exit 1
           fi
 
-          echo "Deployment verification successful! The application is running and serving the expected content."
- 
+          export APP_URL=http://$EXTERNAL_IP
+
+          node verify-deployment.js
+
             
 
 
