@@ -108,6 +108,7 @@ jobs:
 
       - name: Verify Deployment
         run: |
+          sleep 60
           # Fetch the external IP address of the service
           EXTERNAL_IP=$(kubectl get svc react-app-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
           echo "External IP: $EXTERNAL_IP"
